@@ -5,7 +5,7 @@
 
 This GitHub action is to build fresh images of latest OpenWrt snapshot for the Mi-RA75 using imagebuilder.
 
-![grafik](https://github.com/minax007/XIAOMI_MI-RA75_OpenWrt/assets/67478561/485a5027-3675-4829-9379-7b266a0b5564)
+![grafik](https://github.com/minax007/XIAOMI_MI-RA75_OpenWrt/assets/67478561/923bc998-5b89-424d-9c3c-b130fc0a424c)
 
 Following packages are already installed, so that you do not need to install them via the command line afterwards: 
 
