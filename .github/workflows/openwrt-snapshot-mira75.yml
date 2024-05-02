@@ -1,4 +1,4 @@
-name: Build OpenWrt MI-RA75
+name: Build OpenWrt SNAPSHOT MI-RA75
 
 on:
 #  schedule:
