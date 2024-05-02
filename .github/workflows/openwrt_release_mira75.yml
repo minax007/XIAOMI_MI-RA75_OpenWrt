@@ -69,7 +69,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ env.OPENWRT_VERSION }}
+        tag_name: ${{ env.RELEASE }}
         release_name: OpenWrt MI-RA75 (${{ env.RELEASE }})
         body: |
           This release is based on OpenWrt release ${{ env.RELEASE }}.
