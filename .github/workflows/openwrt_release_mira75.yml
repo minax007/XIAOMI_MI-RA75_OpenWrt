@@ -34,9 +34,9 @@ jobs:
     - name: Download imagebuilder
       working-directory: /mnt/workdir
       run: |
-        curl -O "https://archive.openwrt.org/releases/${{ env.RELEASE }}/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/openwrt-imagebuilder-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.xz"
-        tar xvaf openwrt-imagebuilder-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.xz
-        ln -sf /mnt/workdir/openwrt-imagebuilder-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64 $GITHUB_WORKSPACE/openwrt
+        curl -O "https://archive.openwrt.org/releases/${{ env.RELEASE }}/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/openwrt-imagebuilder-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.xz"
+        tar xvaf openwrt-imagebuilder-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.xz
+        ln -sf /mnt/workdir/openwrt-imagebuilder-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64 $GITHUB_WORKSPACE/openwrt
  
     # Pull the first six letters from the version.buildinfo-file for naming the release e. g. "R16767"
     - name: Download version info
@@ -47,7 +47,7 @@ jobs:
     - name: Include External ipk-Packages
       run: |
         wget -O packages.txt https://github.com/minax007/packages/raw/main/external-package-urls.txt
-        cat packages.txt | xargs wget -P /mnt/workdir/openwrt-imagebuilder-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64/packages
+        cat packages.txt | xargs wget -P /mnt/workdir/openwrt-imagebuilder-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64/packages
         
     - name: Build the image of type 1
       id: type1
