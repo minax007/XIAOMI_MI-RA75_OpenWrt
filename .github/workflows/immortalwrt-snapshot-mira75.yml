@@ -1,0 +1,99 @@
+name: Build ImmortalWrt SNAPSHOT MI-RA75
+
+on:
+#  schedule:
+#    - cron: "0 2 * * *"
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+  
+env:
+  BOARD: "ramips"
+  SUBTARGET: "mt76x8"
+  PROFILE: "xiaomi_mi-ra75"
+  PACKAGES_TYPE1: "luci luci-theme-material luci-app-adblock tcpdump luci-app-nlbwmon openssh-sftp-server luci-app-cpu-status-mini luci-app-access-control internet-detector luci-app-internet-detector luci-app-log-viewer luci-compat openvpn-openssl luci-app-openvpn"
+  PACKAGES_TYPE2: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector"
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@master
+
+    - name: Initialization environment
+      env:
+        DEBIAN_FRONTEND: noninteractive
+      run: |
+        sudo mkdir -p /mnt/workdir
+        sudo chown $USER:$GROUPS /mnt/workdir
+    - name: Download imagebuilder
+      working-directory: /mnt/workdir
+      run: |
+        curl -O "https://downloads.immortalwrt.org/snapshots/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-imagebuilder-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.zst"
+        tar xvaf immortalwrt-imagebuilder-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.zst
+        ln -sf /mnt/workdir/immortalwrt-imagebuilder-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64 $GITHUB_WORKSPACE/immortalwrt
+ 
+    # Pull the first six letters from the version.buildinfo-file for naming the release e. g. "R16767"
+    - name: Download version info
+      run: |
+        curl -O "https://downloads.immortalwrt.org/snapshots/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/version.buildinfo"
+        echo "IMMORTALWRT_VERSION=$(cut -c-6 <<< cat version.buildinfo)" >> $GITHUB_ENV 
+
+    - name: Include External ipk-Packages
+      run: |
+        wget -O packages.txt https://github.com/minax007/packages/raw/main/external-package-urls.txt
+        cat packages.txt | xargs wget -P /mnt/workdir/immortalwrt-imagebuilder-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64/packages
+        
+    - name: Build the image of type 1
+      id: type1
+      run: |
+        cd immortalwrt
+        make image PROFILE="${{ env.PROFILE }}" PACKAGES="${{ env.PACKAGES_TYPE1 }}"
+        mv bin/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-${{ env.BOARD }}-${{ env.SUBTARGET }}-${{ env.PROFILE }}-squashfs-sysupgrade.bin ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_sysupgrade.bin
+
+    - name: Build the image of type 2
+      id: type2
+      run: |
+        cd immortalwrt
+        make image PROFILE="${{ env.PROFILE }}" PACKAGES="${{ env.PACKAGES_TYPE2 }}"
+        mv bin/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-${{ env.BOARD }}-${{ env.SUBTARGET }}-${{ env.PROFILE }}-squashfs-sysupgrade.bin ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_MINI_sysupgrade.bin
+      
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.IMMORTALWRT_VERSION }}
+        release_name: ImmortalWrt MI-RA75 (${{ env.IMMORTALWRT_VERSION }})
+        body: |
+          This release is based on ImmortalWrt snapshot ${{ env.IMMORTALWRT_VERSION }}.
+                    
+        draft: false
+        prerelease: false
+
+    - name: Upload type1 Asset
+      id: upload-release-asset-type1
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: immortalwrt/ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_sysupgrade.bin
+        asset_name: ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_sysupgrade.bin 
+        asset_content_type: application/bin
+
+    - name: Upload type2 Asset
+      id: upload-release-asset-type2
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: immortalwrt/ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_MINI_sysupgrade.bin
+        asset_name: ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_MINI_sysupgrade.bin
+        asset_content_type: application/bin
