@@ -1,4 +1,4 @@
-[![Build OpenWrt](https://github.com/minax007/XIAOMI_MI-RA75_OpenWrt/actions/workflows/build-openwrt-mira75.yml/badge.svg)](https://github.com/minax007/XIAOMI_MI-RA75_OpenWrt/actions/workflows/build-openwrt-mira75.yml)
+[![Build OpenWrt](https://github.com/minax007/XIAOMI_MI-RA75_OpenWrt/actions/workflows/openwrt-release-mira75.yml/badge.svg)](https://github.com/minax007/XIAOMI_MI-RA75_OpenWrt/actions/workflows/openwrt-release-mira75.yml)
 [![release](https://img.shields.io/github/v/release/minax007/XIAOMI_MI-RA75_OpenWrt.svg)](https://github.com/minax007/XIAOMI_MI-RA75_OpenWrt/releases)
 
 # OpenWrt snapshot for Xiaomi Mi-RA75 (Xiaomi Mi WiFi Range Extender AC1200)
