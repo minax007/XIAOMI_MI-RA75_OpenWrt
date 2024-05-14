@@ -12,8 +12,11 @@ env:
   BOARD: "ramips"
   SUBTARGET: "mt76x8"
   PROFILE: "xiaomi_mi-ra75"
-  PACKAGES_TYPE1: "luci luci-theme-material luci-app-adblock tcpdump luci-app-nlbwmon openssh-sftp-server luci-app-cpu-status-mini luci-app-access-control internet-detector luci-app-internet-detector luci-app-log-viewer luci-compat openvpn-openssl luci-app-openvpn"
-  PACKAGES_TYPE2: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector luci-app-log-viewer openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe"  
+#  PACKAGES_TYPE1: "luci luci-theme-material luci-app-adblock tcpdump luci-app-nlbwmon openssh-sftp-server luci-app-cpu-status-mini luci-app-access-control internet-detector luci-app-internet-detector luci-app-log-viewer luci-compat openvpn-openssl luci-app-openvpn openssh-sftp-server"
+#  PACKAGES_TYPE2: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector luci-app-log-viewer openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe openssh-sftp-server"
+  PACKAGES_TYPE1: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector luci-app-log-viewer openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe openssh-sftp-server"
+  PACKAGES_TYPE2: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector luci-app-log-viewer openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe luci-app-https-dns-proxy"
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -52,14 +55,14 @@ jobs:
       run: |
         cd immortalwrt
         make image PROFILE="${{ env.PROFILE }}" PACKAGES="${{ env.PACKAGES_TYPE1 }}"
-        mv bin/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-${{ env.BOARD }}-${{ env.SUBTARGET }}-${{ env.PROFILE }}-squashfs-sysupgrade.bin ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_sysupgrade.bin
+        mv bin/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-${{ env.BOARD }}-${{ env.SUBTARGET }}-${{ env.PROFILE }}-squashfs-sysupgrade.bin ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_SFTP_sysupgrade.bin
 
     - name: Build the image of type 2
       id: type2
       run: |
         cd immortalwrt
         make image PROFILE="${{ env.PROFILE }}" PACKAGES="${{ env.PACKAGES_TYPE2 }}"
-        mv bin/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-${{ env.BOARD }}-${{ env.SUBTARGET }}-${{ env.PROFILE }}-squashfs-sysupgrade.bin ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_MINI_sysupgrade.bin
+        mv bin/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-${{ env.BOARD }}-${{ env.SUBTARGET }}-${{ env.PROFILE }}-squashfs-sysupgrade.bin ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_DoH_sysupgrade.bin
       
     - name: Create Release
       id: create_release
@@ -82,8 +85,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: immortalwrt/ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_sysupgrade.bin
-        asset_name: ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_sysupgrade.bin 
+        asset_path: immortalwrt/ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_SFTP_sysupgrade.bin
+        asset_name: ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_SFTP_sysupgrade.bin 
         asset_content_type: application/bin
 
     - name: Upload type2 Asset
@@ -93,6 +96,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: immortalwrt/ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_MINI_sysupgrade.bin
-        asset_name: ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_MINI_sysupgrade.bin
+        asset_path: immortalwrt/ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_DoH_sysupgrade.bin
+        asset_name: ImmortalWrt_MI-RA75_${{ env.IMMORTALWRT_VERSION }}_DoH_sysupgrade.bin
         asset_content_type: application/bin
