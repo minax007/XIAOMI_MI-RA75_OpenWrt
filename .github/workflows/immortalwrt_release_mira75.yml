@@ -38,14 +38,14 @@ jobs:
     - name: Download imagebuilder
       working-directory: /mnt/workdir
       run: |
-        curl -O "https://archive.immortalwrt.org/releases/${{ env.RELEASE }}/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-imagebuilder-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.xz"
+        curl -O "https://downloads.immortalwrt.org/releases/${{ env.RELEASE }}/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/immortalwrt-imagebuilder-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.xz"
         tar xvaf immortalwrt-imagebuilder-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64.tar.xz
         ln -sf /mnt/workdir/immortalwrt-imagebuilder-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}.Linux-x86_64 $GITHUB_WORKSPACE/immortalwrt
  
     # Pull the first six letters from the version.buildinfo-file for naming the release e. g. "R16767"
     - name: Download version info
       run: |
-        curl -O "https://archive.immortalwrt.org/releases/${{ env.RELEASE }}/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/version.buildinfo"
+        curl -O "https://downloads.immortalwrt.org/releases/${{ env.RELEASE }}/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/version.buildinfo"
         echo "IMMORTALWRT_VERSION=$(cut -c-6 <<< cat version.buildinfo)" >> $GITHUB_ENV 
 
     - name: Include External ipk-Packages
