@@ -16,7 +16,7 @@ env:
 #  PACKAGES_TYPE1: "luci luci-theme-material luci-app-adblock tcpdump luci-app-nlbwmon openssh-sftp-server luci-app-cpu-status-mini luci-app-access-control internet-detector luci-app-internet-detector luci-app-log-viewer luci-compat openvpn-openssl luci-app-openvpn openssh-sftp-server"
 #  PACKAGES_TYPE2: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector luci-app-log-viewer openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe openssh-sftp-server"
 #  PACKAGES_TYPE1: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector luci-app-log-viewer openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe openssh-sftp-server"
-  PACKAGES_TYPE1: "uhttpd luci-mod-admin-full luci-base libiwinfo-lua luci-app-firewall luci-theme-material luci-app-adblock luci-app-access-control luci-app-cpu-status-mini luci-app-log-viewer internet-detector luci-app-internet-detector -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe luci-app-https-dns-proxy curl -opkg openssh-sftp-server zram-swap"  
+  PACKAGES_TYPE1: "luci luci-theme-material luci-app-adblock luci-app-access-control luci-app-cpu-status-mini luci-app-log-viewer internet-detector luci-app-internet-detector -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe luci-app-https-dns-proxy curl -opkg openssh-sftp-server"  
 
 #  PACKAGES_TYPE2: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector luci-app-log-viewer openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe luci-app-https-dns-proxy curl"
   # Minimalistic package 
@@ -61,7 +61,7 @@ jobs:
       run: |
         cd openwrt
         make image PROFILE="${{ env.PROFILE }}" PACKAGES="${{ env.PACKAGES_TYPE1 }}"
-        mv bin/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/openwrt-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}-${{ env.PROFILE }}-squashfs-sysupgrade.bin OpenWrt_MI-RA75_${{ env.RELEASE }}_ZRAM_sysupgrade.bin
+        mv bin/targets/${{ env.BOARD }}/${{ env.SUBTARGET }}/openwrt-${{ env.RELEASE }}-${{ env.BOARD }}-${{ env.SUBTARGET }}-${{ env.PROFILE }}-squashfs-sysupgrade.bin OpenWrt_MI-RA75_${{ env.RELEASE }}_FULL_sysupgrade.bin
 
     - name: Build the image of type 2
       id: type2
@@ -91,8 +91,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-        asset_path: openwrt/OpenWrt_MI-RA75_${{ env.RELEASE }}_ZRAM_sysupgrade.bin
-        asset_name: OpenWrt_MI-RA75_${{ env.RELEASE }}_ZRAM_sysupgrade.bin
+        asset_path: openwrt/OpenWrt_MI-RA75_${{ env.RELEASE }}_FULL_sysupgrade.bin
+        asset_name: OpenWrt_MI-RA75_${{ env.RELEASE }}_FULL_sysupgrade.bin
         asset_content_type: application/bin
 
     - name: Upload type2 Asset
