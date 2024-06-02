@@ -21,7 +21,7 @@ env:
 #  PACKAGES_TYPE2: "luci luci-theme-material luci-app-cpu-status-mini internet-detector luci-app-internet-detector luci-app-log-viewer openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe luci-app-https-dns-proxy curl"
   # Minimalistic package 
 #  PACKAGES_TYPE2: "uhttpd luci-mod-admin-full luci-base libiwinfo-lua luci-app-firewall luci-theme-material luci-app-adblock luci-app-access-control luci-app-cpu-status-mini luci-app-log-viewer internet-detector luci-app-internet-detector openvpn-openssl luci-app-openvpn -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe luci-app-https-dns-proxy curl -opkg"  
-  PACKAGES_TYPE2: "uhttpd luci-mod-admin-full luci-base libiwinfo-lua luci-app-firewall luci-theme-material luci-app-adblock luci-app-access-control luci-app-cpu-status-mini luci-app-log-viewer internet-detector luci-app-internet-detector -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe luci-app-https-dns-proxy curl -opkg openssh-sftp-server"  
+  PACKAGES_TYPE2: "uhttpd luci-mod-admin-full luci-base libiwinfo-lua luci-app-firewall luci-theme-material luci-app-adblock luci-app-access-control luci-app-cpu-status-mini luci-app-log-viewer internet-detector luci-app-internet-detector -ip6tables -odhcp6c -kmod-ipv6 -kmod-ip6tables -odhcpd-ipv6only -ppp -ppp-mod-pppoe luci-app-https-dns-proxy curl -opkg openssh-sftp-server luci-compat"  
   
 jobs:
   build:
