@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   
 env:
-  RELEASE: "24.10-SNAPSHOT"
+  RELEASE: "24.10.0"
   BOARD: "ramips"
   SUBTARGET: "mt76x8"
   PROFILE: "xiaomi_mi-ra75"
